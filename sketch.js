@@ -1,5 +1,5 @@
-let cols = 5;
-let rows = 5;
+let cols = 25;
+let rows = 25;
 //closedset stores the nodes that are finished being evaluated
 let closedSet = [];
 //openset are nodes that need to be evaluated
@@ -7,9 +7,11 @@ let openSet = [];
 let grid = new Array(cols);
 let start;
 let end;
+let path = [];
 
 let w;
 let h;
+let current
 function setup() {
     createCanvas(windowWidth, windowHeight);
     w = width / cols;
@@ -39,17 +41,17 @@ function setup() {
 
 function removeFromArray(arr, element) {
     for (let i = arr.length - 1; i >= 0; i--) {
-        if(arr[i]== element){
-            arr.splice(i, 1); 
+        if (arr[i] == element) {
+            arr.splice(i, 1);
         }
     }
 }
 
-function heuristic(a,b){
-    let d = dist(a.i,a.j,b.i,b.j)
-    return d
+function heuristic(a, b) {
+    // let d = dist(a.i, a.j, b.i, b.j);
+    let d = abs(a.i- b.i) + abs(a.j-b.j)
+    return d;
 }
-
 
 function draw() {
     if (openSet.length > 0) {
@@ -61,9 +63,10 @@ function draw() {
             }
         }
 
-        let current = openSet[winner];
+        current = openSet[winner];
 
         if (current == end) {
+            noLoop();
             console.log("Done");
         }
         removeFromArray(openSet, current);
@@ -77,18 +80,17 @@ function draw() {
                 let tempG = current.g + 1;
 
                 if (openSet.includes(neighbor)) {
-                    if(tempG < neighbor.g){
-                        neighbor.g = tempG
+                    if (tempG < neighbor.g) {
+                        neighbor.g = tempG;
                     }
-                }else{
-                    neighbor.g = tempG
-                    openSet.push(neighbor)
+                } else {
+                    neighbor.g = tempG;
+                    openSet.push(neighbor);
                 }
 
-                neighbor.h = heuristic(neighbor, end)
-                neighbor.f = neighbor.g + neighbor.h
-
-                
+                neighbor.h = heuristic(neighbor, end);
+                neighbor.f = neighbor.g + neighbor.h;
+                neighbor.previous = current;
             }
         }
     } else {
@@ -110,5 +112,17 @@ function draw() {
         openSet[i].show(color(0, 255, 0));
     }
 
-    console.log(grid);
+    path = [];
+    let temp = current;
+    path.push(temp);
+    while (temp.previous) {
+        path.push(temp.previous);
+        temp = temp.previous;
+    }
+
+    for (let i = 0; i < path.length; i++) {
+        path[i].show(color(0, 0, 255));
+    }
+
+    // console.log(grid);
 }

@@ -6,7 +6,7 @@ class Spot {
         this.g = 0;
         this.h = 0;
         this.neighbors = [];
-        this.previous = undefined
+        this.previous = undefined;
     }
 
     show(clr) {
@@ -26,10 +26,10 @@ class Spot {
             this.neighbors.push(grid[i - 1][j]);
         }
         if (j < rows - 1) {
-            this.neighbors.push(grid[(i, j)][1]);
+            this.neighbors.push(grid[i][j + 1]);
         }
         if (j > 0) {
-            this.neighbors.push(grid[(i, j)][1]);
+            this.neighbors.push(grid[i][j - 1]);
         }
     }
 }
