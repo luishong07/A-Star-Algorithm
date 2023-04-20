@@ -42,7 +42,15 @@ function draw() {
 
     for(let  i = 0; i< cols;i++){
         for(let j = 0; j < rows; j++){
-            grid[i][j].show()
+            grid[i][j].show(color(255))
         }
+    }
+
+    for(let i = 0; i < closedSet.length; i++){
+        closedSet[i].show(color(255,0,0))
+    }
+
+    for(let i = 0; i < openSet.length; i++){
+        openSet[i].show(color(0,255,0))
     }
 }
