@@ -7,10 +7,19 @@ class Spot {
         this.h = 0;
         this.neighbors = [];
         this.previous = undefined;
+
+        this.wall = false
+
+        if(random(1)< 0.3){
+            this.wall = true
+        }
     }
 
     show(clr) {
         fill(clr);
+        if(this.wall){
+            fill('black')
+        }
         // stroke(120);
         noStroke();
         rect(this.i * w, this.j * h, w - 1, h - 1);

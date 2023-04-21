@@ -11,7 +11,8 @@ let path = [];
 
 let w;
 let h;
-let current
+let current;
+let noSolution = false;
 function setup() {
     createCanvas(windowWidth, windowHeight);
     w = width / cols;
@@ -35,6 +36,8 @@ function setup() {
 
     start = grid[0][0];
     end = grid[cols - 1][rows - 1];
+    start.wall = false;
+    end.wall = false;
 
     openSet.push(start);
 }
@@ -49,7 +52,7 @@ function removeFromArray(arr, element) {
 
 function heuristic(a, b) {
     // let d = dist(a.i, a.j, b.i, b.j);
-    let d = abs(a.i- b.i) + abs(a.j-b.j)
+    let d = abs(a.i - b.i) + abs(a.j - b.j);
     return d;
 }
 
@@ -76,7 +79,7 @@ function draw() {
         for (let i = 0; i < neighbors.length; i++) {
             let neighbor = neighbors[i];
 
-            if (!closedSet.includes(neighbor)) {
+            if (!closedSet.includes(neighbor) && !neighbor.wall) {
                 let tempG = current.g + 1;
 
                 if (openSet.includes(neighbor)) {
@@ -94,6 +97,10 @@ function draw() {
             }
         }
     } else {
+        // alert('Well, darn it.')
+        noSolution = true;
+        console.log("No solution");
+        noLoop()
         //no solution
     }
     background(0);
@@ -112,12 +119,14 @@ function draw() {
         openSet[i].show(color(0, 255, 0));
     }
 
-    path = [];
-    let temp = current;
-    path.push(temp);
-    while (temp.previous) {
-        path.push(temp.previous);
-        temp = temp.previous;
+    if (!noSolution) {
+        path = [];
+        let temp = current;
+        path.push(temp);
+        while (temp.previous) {
+            path.push(temp.previous);
+            temp = temp.previous;
+        }
     }
 
     for (let i = 0; i < path.length; i++) {
