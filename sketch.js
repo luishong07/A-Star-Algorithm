@@ -15,7 +15,7 @@ let current;
 // let noSolution = false;
 function setup() {
     // createCanvas(windowWidth, windowHeight);
-    frameRate(1)
+    // frameRate(1)
     createCanvas(800, 800);
 
     w = width / cols;
@@ -103,8 +103,8 @@ function draw() {
         // alert('Well, darn it.')
         // noSolution = true;
         console.log("No solution");
-        noLoop()
-        return
+        noLoop();
+        return;
         //no solution
     }
     background(0);
@@ -123,15 +123,13 @@ function draw() {
         openSet[i].show(color(0, 255, 0));
     }
 
-    // if (!noSolution) {
-        path = [];
-        let temp = current;
-        path.push(temp);
-        while (temp.previous) {
-            path.push(temp.previous);
-            temp = temp.previous;
-        }
-    // }
+    path = [];
+    let temp = current;
+    path.push(temp);
+    while (temp.previous) {
+        path.push(temp.previous);
+        temp = temp.previous;
+    }
 
     for (let i = 0; i < path.length; i++) {
         path[i].show(color(0, 0, 255));
@@ -139,4 +137,3 @@ function draw() {
 
     // console.log(grid);
 }
-
