@@ -10,9 +10,9 @@ class Spot {
 
         this.wall = false;
 
-        if (random(1) < 0.3) {
-            this.wall = true;
-        }
+        // if (random(1) < 0.3) {
+        //     this.wall = true;
+        // }
     }
 
     show(clr) {

@@ -54,8 +54,8 @@ function removeFromArray(arr, element) {
 }
 
 function heuristic(a, b) {
-    // let d = dist(a.i, a.j, b.i, b.j);
-    let d = abs(a.i - b.i) + abs(a.j - b.j);
+    let d = dist(a.i, a.j, b.i, b.j);
+    // let d = abs(a.i - b.i) + abs(a.j - b.j);
     return d;
 }
 
@@ -84,24 +84,25 @@ function draw() {
 
             if (!closedSet.includes(neighbor) && !neighbor.wall) {
                 let tempG = current.g + 1;
-
+                let newPath = false;
                 if (openSet.includes(neighbor)) {
                     if (tempG < neighbor.g) {
                         neighbor.g = tempG;
+                        newPath = true;
                     }
                 } else {
                     neighbor.g = tempG;
+                    newPath = true;
                     openSet.push(neighbor);
                 }
-
-                neighbor.h = heuristic(neighbor, end);
-                neighbor.f = neighbor.g + neighbor.h;
-                neighbor.previous = current;
+                if (newPath) {
+                    neighbor.h = heuristic(neighbor, end);
+                    neighbor.f = neighbor.g + neighbor.h;
+                    neighbor.previous = current;
+                }
             }
         }
     } else {
-        // alert('Well, darn it.')
-        // noSolution = true;
         console.log("No solution");
         noLoop();
         return;
