@@ -8,17 +8,17 @@ class Spot {
         this.neighbors = [];
         this.previous = undefined;
 
-        this.wall = false
+        this.wall = false;
 
-        if(random(1)< 0.3){
-            this.wall = true
+        if (random(1) < 0.3) {
+            this.wall = true;
         }
     }
 
     show(clr) {
         fill(clr);
-        if(this.wall){
-            fill('black')
+        if (this.wall) {
+            fill("black");
         }
         // stroke(120);
         noStroke();
@@ -39,6 +39,18 @@ class Spot {
         }
         if (j > 0) {
             this.neighbors.push(grid[i][j - 1]);
+        }
+        if (i > 0 && j > 0) {
+            this.neighbors.push(grid[i - 1][j - 1]);
+        }
+        if (i < cols - 1 && j > 0) {
+            this.neighbors.push(grid[i + 1][j - 1]);
+        }
+        if (i > 0 && j < rows - 1) {
+            this.neighbors.push(grid[i - 1][j + 1]);
+        }
+        if (i < cols - 1 && j < rows - 1) {
+            this.neighbors.push(grid[i + 1][j + 1]);
         }
     }
 }

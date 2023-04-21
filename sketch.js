@@ -1,5 +1,5 @@
-let cols = 25;
-let rows = 25;
+let cols = 40;
+let rows = 40;
 //closedset stores the nodes that are finished being evaluated
 let closedSet = [];
 //openset are nodes that need to be evaluated
@@ -12,9 +12,12 @@ let path = [];
 let w;
 let h;
 let current;
-let noSolution = false;
+// let noSolution = false;
 function setup() {
-    createCanvas(windowWidth, windowHeight);
+    // createCanvas(windowWidth, windowHeight);
+    frameRate(1)
+    createCanvas(800, 800);
+
     w = width / cols;
     h = height / rows;
     //2d array
@@ -98,9 +101,10 @@ function draw() {
         }
     } else {
         // alert('Well, darn it.')
-        noSolution = true;
+        // noSolution = true;
         console.log("No solution");
         noLoop()
+        return
         //no solution
     }
     background(0);
@@ -119,7 +123,7 @@ function draw() {
         openSet[i].show(color(0, 255, 0));
     }
 
-    if (!noSolution) {
+    // if (!noSolution) {
         path = [];
         let temp = current;
         path.push(temp);
@@ -127,7 +131,7 @@ function draw() {
             path.push(temp.previous);
             temp = temp.previous;
         }
-    }
+    // }
 
     for (let i = 0; i < path.length; i++) {
         path[i].show(color(0, 0, 255));
@@ -135,3 +139,4 @@ function draw() {
 
     // console.log(grid);
 }
+
