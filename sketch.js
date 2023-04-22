@@ -1,90 +1,110 @@
-let cols = 40;
-let rows = 40;
-//closedset stores the nodes that are finished being evaluated
-let closedSet = [];
-//openset are nodes that need to be evaluated
-let openSet = [];
-let grid = new Array(cols);
-let start;
-let end;
-let path = [];
-
-let w;
-let h;
-let current;
-// let noSolution = false;
-function setup() {
-    // createCanvas(windowWidth, windowHeight);
-    // frameRate(1)
-    createCanvas(800, 800);
-
-    w = width / cols;
-    h = height / rows;
-    //2d array
-    for (let i = 0; i < cols; i++) {
-        grid[i] = new Array(rows);
-    }
-
-    for (let i = 0; i < cols; i++) {
-        for (let j = 0; j < rows; j++) {
-            grid[i][j] = new Spot(i, j);
-        }
-    }
-
-    for (let i = 0; i < cols; i++) {
-        for (let j = 0; j < rows; j++) {
-            grid[i][j].addNeighbors(grid);
-        }
-    }
-
-    start = grid[0][0];
-    end = grid[cols - 1][rows - 1];
-    start.wall = false;
-    end.wall = false;
-
-    openSet.push(start);
-}
-
-function removeFromArray(arr, element) {
-    for (let i = arr.length - 1; i >= 0; i--) {
-        if (arr[i] == element) {
+// Function to delete element from the array
+function removeFromArray(arr, elt) {
+    // Could use indexOf here instead to be more efficient
+    for (var i = arr.length - 1; i >= 0; i--) {
+        if (arr[i] == elt) {
             arr.splice(i, 1);
         }
     }
 }
 
+// An educated guess of how far it is between two points
 function heuristic(a, b) {
-    let d = dist(a.i, a.j, b.i, b.j);
-    // let d = abs(a.i - b.i) + abs(a.j - b.j);
+    var d = dist(a.i, a.j, b.i, b.j);
+    // var d = abs(a.i - b.i) + abs(a.j - b.j);
     return d;
 }
 
+// How many columns and rows?
+var cols = 40;
+var rows = 40;
+
+// This will be the 2D array
+var grid = new Array(cols);
+
+// Open and closed set
+var openSet = [];
+var closedSet = [];
+
+// Start and end
+var start;
+var end;
+
+// Width and height of each cell of grid
+var w, h;
+
+// The road taken
+var path = [];
+
+function setup() {
+    createCanvas(800, 800);
+    console.log("A*");
+
+    // Grid cell size
+    w = width / cols;
+    h = height / rows;
+
+    // Making a 2D array
+    for (var i = 0; i < cols; i++) {
+        grid[i] = new Array(rows);
+    }
+
+    for (var i = 0; i < cols; i++) {
+        for (var j = 0; j < rows; j++) {
+            grid[i][j] = new Spot(i, j);
+        }
+    }
+
+    // All the neighbors
+    for (var i = 0; i < cols; i++) {
+        for (var j = 0; j < rows; j++) {
+            grid[i][j].addNeighbors(grid);
+        }
+    }
+
+    // Start and end
+    start = grid[0][0];
+    end = grid[cols - 1][rows - 1];
+    start.wall = false;
+    end.wall = false;
+
+    // openSet starts with beginning only
+    openSet.push(start);
+}
+
 function draw() {
+    // Am I still searching?
     if (openSet.length > 0) {
-        //we keep going
-        let winner = 0;
-        for (let i = 0; i < openSet.length; i++) {
-            if (openSet[i].f < openSet[winner]) {
+        // Best next option
+        var winner = 0;
+        for (var i = 0; i < openSet.length; i++) {
+            if (openSet[i].f < openSet[winner].f) {
                 winner = i;
             }
         }
+        var current = openSet[winner];
 
-        current = openSet[winner];
-
-        if (current == end) {
+        // Did I finish?
+        if (current === end) {
             noLoop();
-            console.log("Done");
+            console.log("DONE!");
         }
+
+        // Best option moves from openSet to closedSet
         removeFromArray(openSet, current);
         closedSet.push(current);
 
-        let neighbors = current.neighbors;
-        for (let i = 0; i < neighbors.length; i++) {
-            let neighbor = neighbors[i];
+        // Check all the neighbors
+        var neighbors = current.neighbors;
+        for (var i = 0; i < neighbors.length; i++) {
+            var neighbor = neighbors[i];
 
+            // Valid next spot?
             if (!closedSet.includes(neighbor) && !neighbor.wall) {
-                let tempG = current.g + 1;
-                let newPath = false;
+                var tempG = current.g + heuristic(neighbor, current);
+
+                // Is this a better path than before?
+                var newPath = false;
                 if (openSet.includes(neighbor)) {
                     if (tempG < neighbor.g) {
                         neighbor.g = tempG;
@@ -95,6 +115,8 @@ function draw() {
                     newPath = true;
                     openSet.push(neighbor);
                 }
+
+                // Yes, it's a better path
                 if (newPath) {
                     neighbor.h = heuristic(neighbor, end);
                     neighbor.f = neighbor.g + neighbor.h;
@@ -102,39 +124,50 @@ function draw() {
                 }
             }
         }
+        // Uh oh, no solution
     } else {
-        console.log("No solution");
+        console.log("no solution");
         noLoop();
         return;
-        //no solution
     }
-    background(0);
 
-    for (let i = 0; i < cols; i++) {
-        for (let j = 0; j < rows; j++) {
-            grid[i][j].show(color(255));
+    // Draw current state of everything
+    background(255);
+
+    for (var i = 0; i < cols; i++) {
+        for (var j = 0; j < rows; j++) {
+            grid[i][j].show();
         }
     }
 
-    for (let i = 0; i < closedSet.length; i++) {
-        closedSet[i].show(color(255, 0, 0));
+    for (var i = 0; i < closedSet.length; i++) {
+        closedSet[i].show(color(255, 0, 0, 50));
     }
 
-    for (let i = 0; i < openSet.length; i++) {
-        openSet[i].show(color(0, 255, 0));
+    for (var i = 0; i < openSet.length; i++) {
+        openSet[i].show(color(0, 255, 0, 50));
     }
 
+    // Find the path by working backwards
     path = [];
-    let temp = current;
+    var temp = current;
     path.push(temp);
     while (temp.previous) {
         path.push(temp.previous);
         temp = temp.previous;
     }
 
-    for (let i = 0; i < path.length; i++) {
-        path[i].show(color(0, 0, 255));
+    for (var i = 0; i < path.length; i++) {
+    path[i].show(color(0, 0, 255));
     }
 
-    // console.log(grid);
+    // Drawing path as continuous line
+    // noFill();
+    // stroke(255, 0, 200);
+    // strokeWeight(w / 2);
+    // beginShape();
+    // for (var i = 0; i < path.length; i++) {
+    //     vertex(path[i].i * w + w / 2, path[i].j * h + h / 2);
+    // }
+    // endShape();
 }
