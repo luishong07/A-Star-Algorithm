@@ -1,9 +1,3 @@
-// Daniel Shiffman
-// http://codingtra.in
-// http://patreon.com/codingtrain
-// Part 1: https://youtu.be/aKYlikFAV4k
-// Part 2: https://youtu.be/EaZxUCWAjb0
-// Part 3: https://youtu.be/jwRT4PCT6RU
 
 // An object to describe a spot in the grid
 function Spot(i, j) {
@@ -36,6 +30,7 @@ function Spot(i, j) {
             ellipse(this.i * w + w / 2, this.j * h + h / 2, w / 2, h / 2);
         } else if (col) {
             fill(col);
+            // stroke('red')
             rect(this.i * w, this.j * h, w, h);
         }
     };

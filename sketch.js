@@ -72,6 +72,10 @@ function setup() {
     openSet.push(start);
 }
 
+function mousePressed(e){
+    console.log(floor(e.offsetX/w),floor(e.offsetY/w))
+}
+
 function draw() {
     // Am I still searching?
     if (openSet.length > 0) {
